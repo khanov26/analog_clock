@@ -1,0 +1,170 @@
+$radius = 300px
+$bgColor = #fffad9
+$borderColor = #ffce34
+$borderWidth = 0.125 * $radius
+$clockFaceRadius = $radius - $borderWidth
+$primeColor = #0e130e
+
+.clock
+	position: relative
+	width: 2 * $radius
+	height: 2 * $radius
+	border-radius: 50%
+	border: $borderWidth solid $borderColor
+	background-color: $bgColor
+	color $primeColor
+
+	&::after
+		content: ""
+		position: absolute
+		top: 50%
+		left: 50%
+		width: 16px
+		height: @width
+		transform: translate3d(-50%, -50%, 0)
+		background-color: $borderColor
+		border-radius: 50%
+
+
+.clock__face
+	position: relative
+	height: 100%
+
+$numbersCircleMargin = 30px
+$numbersCircleRadius = $clockFaceRadius - $numbersCircleMargin
+
+.clock__hour-numbers
+	position: absolute
+	top: $numbersCircleMargin
+	left: $numbersCircleMargin
+	right: $numbersCircleMargin
+	bottom: $numbersCircleMargin
+
+.clock__hour-number
+	position: absolute
+	width: 50px
+	height: 50px
+	display: flex
+	justify-content: center
+	align-items: center
+	font-size: 2rem
+	transform: translate3d(-50%, -50%, 0)
+
+
+for $i in (1..12)
+	.clock__hour-number:nth-child({$i})
+		$angle = 90deg - (360deg / 12 * $i);
+		left: round($numbersCircleRadius + $numbersCircleRadius * cos($angle), 1)
+		top: round($numbersCircleRadius - $numbersCircleRadius * sin($angle), 1)
+
+
+$minuteMarksCircleMargin = 60px
+$minuteMarksCircleRadius = $clockFaceRadius - $minuteMarksCircleMargin
+.clock__minute-marks
+	position: absolute
+	top: $minuteMarksCircleMargin
+	left: $minuteMarksCircleMargin
+	right: $minuteMarksCircleMargin
+	bottom: $minuteMarksCircleMargin
+
+.clock__minute-mark
+	position: absolute
+	width: 1px
+	height: 15px
+	background-color: $primeColor
+	transform-origin: top center
+
+	&:nth-child(5n)
+		width: 2px
+		height: 20px
+
+for $i in (1..60)
+	.clock__minute-mark:nth-child({$i})
+		$angle = 90deg - $i * 6
+		left: round($minuteMarksCircleRadius + $minuteMarksCircleRadius * cos($angle), 1)
+		top: round($minuteMarksCircleRadius - $minuteMarksCircleRadius * sin($angle), 1)
+		transform: rotateZ($i * 6deg)
+
+
+.clock__hour-hand
+	position: absolute
+	top: $clockFaceRadius
+	left: $clockFaceRadius
+
+	$handWidth = 16px
+	$handHeightTop = 0.65 * $clockFaceRadius
+	$handHeightBottom = 30px
+
+	&::before
+	&::after
+		content: ""
+		position: absolute
+		border-left: ($handWidth / 2) solid transparent
+		border-right: ($handWidth / 2) solid transparent
+		left: ($handWidth / -2)
+
+	&::before
+		border-bottom: $handHeightTop solid $primeColor
+		top: -1 * ($handHeightTop)
+
+
+	&::after
+		border-top: $handHeightBottom solid $primeColor
+		bottom: -1 * $handHeightBottom
+
+
+.clock__minute-hand
+	position: absolute
+	top: $clockFaceRadius
+	left: $clockFaceRadius
+
+	$handWidth = 14px
+	$handHeightTop = 0.8 * $clockFaceRadius
+	$handHeightBottom = 30px
+
+	&::before
+	&::after
+		content: ""
+		position: absolute
+		border-left: ($handWidth / 2) solid transparent
+		border-right: ($handWidth / 2) solid transparent
+		left: ($handWidth / -2)
+
+	&::before
+		border-bottom: $handHeightTop solid $primeColor
+		top: -1 * ($handHeightTop)
+
+
+	&::after
+		border-top: $handHeightBottom solid $primeColor
+		bottom: -1 * $handHeightBottom
+
+
+.clock__second-hand
+	position: absolute
+	top: $clockFaceRadius
+	left: $clockFaceRadius
+
+	$handWidth = 2px
+	$handHeightTop = 0.8 * $clockFaceRadius
+	$handHeightBottom = 60px
+	$handBgColor = #ff4349
+
+	&::before
+	&::after
+		content: ""
+		position: absolute
+		background-color: $handBgColor
+
+	&::before
+		width: $handWidth
+		height: $handHeightTop
+		left: (@width / -2)
+		top: -1 * ($handHeightTop)
+
+
+	&::after
+		width: $handWidth * 2
+		height: $handHeightBottom
+		left: (@width / -2)
+		bottom: -1 * ($handHeightBottom)
